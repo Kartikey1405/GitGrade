@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 
 const GOOGLE_CLIENT_ID = '565043140238-m62n1otfs1nj8op5jtu64aogqlf0s0n5.apps.googleusercontent.com';
-const REDIRECT_URI = 'http://localhost:8000/api/auth/callback';
+const REDIRECT_URI = 'https://gitgrade-c4nj.onrender.com/api/auth/callback';
 
 const Login = () => {
   const handleGoogleLogin = () => {
