@@ -5,12 +5,12 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 import os
-import ssl # MUST be imported for the SSL context
+import ssl # Keep import, as it is needed for default context creation
 from app.config import Config 
 
 class EmailService:
     def generate_pdf(self, analysis_data):
-        # ... (PDF generation logic unchanged, kept for completeness) ...
+        # ... (PDF generation logic unchanged) ...
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -117,12 +117,12 @@ class EmailService:
                 )
                 msg.attach(part)
 
-            # 🚨 FINAL FIX: Standard SMTP connection on Port 2525 with explicit TLS context
-            context = ssl.create_default_context()
+            # 🚨 FINAL FIX: Standard SMTP connection on Port 2525 with simplified TLS handshake
+            # This is the most robust method for non-standard cloud ports.
             server = smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10)
             
-            # 🚨 CRITICAL: Explicitly start TLS with the context for non-standard ports
-            server.starttls(context=context) 
+            # CRITICAL: Call starttls() without the context for a more generic handshake
+            server.starttls() 
             
             server.login(from_email, password)
             text = msg.as_string()
