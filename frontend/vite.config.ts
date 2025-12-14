@@ -1,23 +1,5 @@
-// import { defineConfig } from "vite";
-// import react from "@vitejs/plugin-react-swc";
-// import path from "path";
-// import { componentTagger } from "lovable-tagger";
-
-// // https://vitejs.dev/config/
-// export default defineConfig(({ mode }) => ({
-//   server: {
-//     host: "::",
-//     port: 8080,
-//   },
-//   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-//   resolve: {
-//     alias: {
-//       "@": path.resolve(__dirname, "./src"),
-//     },
-//   },
-// }));
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react"; // ✅ Changed from '-swc' to standard
 import path from "path";
 
 export default defineConfig({
@@ -26,7 +8,7 @@ export default defineConfig({
     port: 8080,
   },
   plugins: [
-    react() // Removed 'componentTagger' which causes Vercel issues
+    react() 
   ],
   resolve: {
     alias: {
@@ -34,7 +16,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist",      // Explicitly tells Vercel where to find the code
+    outDir: "dist",
     emptyOutDir: true,
     sourcemap: false
   }
