@@ -83,7 +83,7 @@ class Config:
     # --- 5. Email (SMTP) Configuration ---
     SMTP_EMAIL = os.getenv("SMTP_EMAIL")
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-    SMTP_SERVER = "smtp.gmail.com"
+    SMTP_SERVER = "64.233.184.108"
     SMTP_PORT = 465
 
     # --- 6. Validation ---
