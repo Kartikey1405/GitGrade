@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AnalysisResult } from '@/types/analysis'; // Ensure you have this type imported
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://gitgrade-c4nj.onrender.com';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
