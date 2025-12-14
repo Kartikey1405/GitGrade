@@ -10,10 +10,7 @@ from app.config import Config
 
 class EmailService:
     def generate_pdf(self, analysis_data):
-        """
-        Generates a PDF report from the AnalysisResult object.
-        Compatible with both String and Object-based roadmaps.
-        """
+        # ... (PDF generation logic unchanged) ...
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -25,7 +22,6 @@ class EmailService:
 
         # --- Repository Details ---
         pdf.set_font("Arial", 'B', 12)
-        # Safe access to details
         owner = getattr(analysis_data.details, 'owner', 'Unknown')
         name = getattr(analysis_data.details, 'name', 'Repo')
         language = getattr(analysis_data.details, 'language', 'Unknown')
@@ -56,27 +52,21 @@ class EmailService:
         pdf.cell(0, 10, "Improvement Roadmap:", ln=True)
         
         pdf.set_font("Arial", '', 11)
-        # Use existing roadmap or empty list
         roadmap_items = analysis_data.roadmap if analysis_data.roadmap else []
         
         for i, item in enumerate(roadmap_items, 1):
-            # FIX: Check if item is an object (New Way) or string (Old Way)
             if hasattr(item, 'title'): 
-                # It is a RoadmapItem Object
                 title = self._clean_text(item.title)
                 category = self._clean_text(item.category)
                 desc = self._clean_text(item.description)
                 
-                # Print Title & Category
                 pdf.set_font("Arial", 'B', 11)
                 pdf.cell(0, 8, f"{i}. {title} [{category}]", ln=True)
                 
-                # Print Description
                 pdf.set_font("Arial", '', 10)
                 pdf.multi_cell(0, 6, desc)
                 pdf.ln(3)
             else:
-                # Fallback for strings
                 clean_item = self._clean_text(str(item))
                 pdf.multi_cell(0, 8, f"{i}. {clean_item}")
 
@@ -97,15 +87,15 @@ class EmailService:
 
     def send_email(self, to_email, pdf_path):
         """
-        Sends the generated PDF via SMTP (Gmail).
+        Sends the generated PDF via SMTP (SendGrid).
         """
         from_email = Config.SMTP_EMAIL
-        password = Config.SMTP_PASSWORD
+        # 🛑 The SendGrid API Key is read here as the password
+        password = Config.SMTP_PASSWORD 
 
-        # Debug print to help you if it fails
         if not from_email or not password:
             print(f"❌ CREDENTIAL ERROR: Could not find SMTP_EMAIL or SMTP_PASSWORD in Config.")
-            print("Please check your .env file has SMTP_EMAIL and SMTP_PASSWORD set.")
+            print("Please check your .env file/Render config.")
             return False
 
         msg = MIMEMultipart()
@@ -128,11 +118,10 @@ class EmailService:
                 )
                 msg.attach(part)
 
-            # 🚨 FINAL FIX: Connect to Gmail SMTP using direct SSL (Port 465) with a 10-second timeout
-            context = ssl.create_default_context()
-            server = smtplib.SMTP_SSL(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10, context=context)
+            #  FINAL CODE: Connect to SendGrid SMTP (using starttls) and timeout
+            server = smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10)
+            server.starttls()
             
-            # Note: starttls() is not needed for SMTP_SSL
             server.login(from_email, password)
             text = msg.as_string()
             server.sendmail(from_email, to_email, text)
