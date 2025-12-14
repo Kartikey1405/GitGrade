@@ -3,7 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import { AuthProvider } from "@/contexts/AuthContext"; // 🔒 Commented out to prevent crash
+import { AuthProvider } from "@/contexts/AuthContext"; // ✅ Re-enabled
+import ProtectedRoute from "@/components/ProtectedRoute"; // ✅ Re-enabled
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import AuthCallback from "./pages/AuthCallback";
@@ -18,18 +19,29 @@ const App = () => (
       <Toaster />
       <Sonner />
       
+      {/* 1. Router must be FIRST */}
       <BrowserRouter>
-          {/* <AuthProvider> 👈 Temporarily removed */}
+      
+        {/* 2. AuthProvider must be INSIDE Router */}
+        <AuthProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {/* </AuthProvider> */}
+        </AuthProvider>
+        
       </BrowserRouter>
-
     </TooltipProvider>
   </QueryClientProvider>
 );
