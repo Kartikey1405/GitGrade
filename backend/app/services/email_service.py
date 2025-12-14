@@ -1,16 +1,19 @@
 from fpdf import FPDF
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email import encoders
 import os
-import ssl # Keep import, as it is needed for default context creation
+import base64 # Required for encoding the PDF file
 from app.config import Config 
+
+# 🚨 NEW IMPORTS for SendGrid API
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
+
 
 class EmailService:
     def generate_pdf(self, analysis_data):
-        # ... (PDF generation logic unchanged) ...
+        """
+        Generates a PDF report from the AnalysisResult object.
+        (PDF generation logic remains unchanged)
+        """
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -87,49 +90,56 @@ class EmailService:
 
     def send_email(self, to_email, pdf_path):
         """
-        Sends the generated PDF via SMTP (SendGrid).
+        Sends the generated PDF via the robust SendGrid API (HTTPS).
+        This bypasses all cloud firewall/SMTP handshake issues.
         """
         from_email = Config.SMTP_EMAIL
-        password = Config.SMTP_PASSWORD 
+        # SMTP_PASSWORD holds the SendGrid API Key (SG.xxxx)
+        api_key = Config.SMTP_PASSWORD 
 
-        if not from_email or not password:
-            print(f"❌ CREDENTIAL ERROR: Could not find SMTP_EMAIL or SMTP_PASSWORD in Config.")
-            print("Please check your .env file/Render config.")
+        if not from_email or not api_key:
+            print(f"❌ CREDENTIAL ERROR: Could not find SMTP_EMAIL or SendGrid API Key in Config.")
             return False
 
-        msg = MIMEMultipart()
-        msg['From'] = from_email
-        msg['To'] = to_email
-        msg['Subject'] = "Your GitGrade Analysis Report 🚀"
+        message = Mail(
+            from_email=from_email,
+            to_emails=to_email,
+            subject='Your GitGrade Analysis Report 🚀',
+            html_content='<strong>Here is your detailed GitHub analysis report attached below.</strong><br><br>Keep coding!<br>- The GitGrade Team'
+        )
 
-        body = "Here is your detailed GitHub analysis report attached below.\n\nKeep coding!\n- The GitGrade Team"
-        msg.attach(MIMEText(body, 'plain'))
+        # Add the PDF attachment
+        try:
+            with open(pdf_path, 'rb') as f:
+                data = f.read()
+            encoded_file = base64.b64encode(data).decode()
+        except FileNotFoundError:
+            print(f"❌ PDF File not found: {pdf_path}")
+            return False
+        
+        attachedFile = Attachment(
+            FileContent(encoded_file),
+            FileName(os.path.basename(pdf_path)),
+            FileType('application/pdf'),
+            Disposition('attachment')
+        )
+        message.attachment = attachedFile
 
         try:
-            with open(pdf_path, "rb") as attachment:
-                part = MIMEBase("application", "octet-stream")
-                part.set_payload(attachment.read())
+            # Send email via HTTPS API call
+            sg = SendGridAPIClient(api_key)
+            # The API call uses standard HTTPS (Port 443), which cannot be blocked.
+            response = sg.send(message)
             
-                encoders.encode_base64(part)
-                part.add_header(
-                    "Content-Disposition",
-                    f"attachment; filename= {os.path.basename(pdf_path)}",
-                )
-                msg.attach(part)
-
-            # 🚨 FINAL FIX: Standard SMTP connection on Port 2525 with simplified TLS handshake
-            # This is the most robust method for non-standard cloud ports.
-            server = smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10)
-            
-            # CRITICAL: Call starttls() without the context for a more generic handshake
-            server.starttls() 
-            
-            server.login(from_email, password)
-            text = msg.as_string()
-            server.sendmail(from_email, to_email, text)
-            server.quit()
-            
-            return True
+            if response.status_code >= 200 and response.status_code < 300:
+                print(f"✅ SendGrid API Success. Status: {response.status_code}")
+                return True
+            else:
+                # Log the specific SendGrid API error for debugging
+                print(f"❌ SendGrid API Error. Status: {response.status_code}")
+                print(f"Response Body: {response.body}")
+                return False
+                
         except Exception as e:
-            print(f"SMTP Error: {e}")
+            print(f"SendGrid API Exception: {e}")
             return False
