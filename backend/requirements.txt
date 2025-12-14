@@ -7,3 +7,4 @@ pydantic
 pydantic[email]
 python-jose[cryptography]
 fpdf2
+sendgrid
