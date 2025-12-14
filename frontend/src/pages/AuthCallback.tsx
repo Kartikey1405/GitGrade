@@ -35,11 +35,10 @@ const AuthCallback = () => {
       try {
         setMessage('Verifying credentials...');
         
-        // --- Direct Call to Python Backend ---
-        const response = await axios.post('http://localhost:8000/api/auth/google', { 
-          code 
-        });
-        
+      // --- Direct Call to Live Python Backend ---
+    const response = await axios.post('https://gitgrade-c4nj.onrender.com/api/auth/google', { 
+      code 
+    });
         // The backend returns { access_token: "...", token_type: "bearer" }
         const token = response.data.access_token;
 
