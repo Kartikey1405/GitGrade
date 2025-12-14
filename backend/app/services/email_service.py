@@ -5,8 +5,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 import os
-import ssl # <--- NEW IMPORT: Required for creating the secure context
-from app.config import Config # Importing your Config class
+import ssl 
+from app.config import Config 
 
 class EmailService:
     def generate_pdf(self, analysis_data):
@@ -128,9 +128,9 @@ class EmailService:
                 )
                 msg.attach(part)
 
-            # 🚨 FIX: Connect to Gmail SMTP using direct SSL (Port 465)
+            # 🚨 FINAL FIX: Connect to Gmail SMTP using direct SSL (Port 465) with a 10-second timeout
             context = ssl.create_default_context()
-            server = smtplib.SMTP_SSL(Config.SMTP_SERVER, Config.SMTP_PORT, context=context)
+            server = smtplib.SMTP_SSL(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10, context=context)
             
             # Note: starttls() is not needed for SMTP_SSL
             server.login(from_email, password)
