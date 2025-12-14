@@ -1,19 +1,23 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import RedirectResponse  # <--- NEW IMPORT
+from fastapi.responses import RedirectResponse
 from app.models import GoogleAuthRequest, Token
 from app.services.auth_service import AuthService
 
 router = APIRouter()
 auth_service = AuthService()
 
-# --- NEW: The Bridge ---
-# This catches the user returning from Google on Port 8000
-# and instantly redirects them to the Frontend on Port 5173
+# --- THE FIX: Redirect to Live Vercel Site ---
+# This catches the user returning from Google and sends them 
+# to your deployed Vercel frontend, not Localhost.
 @router.get("/callback")
 async def auth_callback(code: str):
-    return RedirectResponse(f"http://localhost:8080/auth/callback?code={code}")
+    # 👇 This is your live Vercel URL
+    frontend_url = "https://git-grade-gamma.vercel.app"
+    
+    # Redirects browser to: https://git-grade-gamma.vercel.app/auth/callback?code=...
+    return RedirectResponse(f"{frontend_url}/auth/callback?code={code}")
 
-# --- Existing Login Logic ---
+# --- Existing Login Logic (Unchanged) ---
 @router.post("/google", response_model=Token)
 async def login_google(request: GoogleAuthRequest):
     """
