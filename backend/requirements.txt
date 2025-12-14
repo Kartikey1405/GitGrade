@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+python-dotenv
+google-generativeai
+pydantic
+pydantic[email]
+python-jose[cryptography]
+fpdf2
