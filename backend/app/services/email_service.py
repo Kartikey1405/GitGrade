@@ -5,12 +5,12 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 import os
-import ssl 
+import ssl # MUST be imported for the SSL context
 from app.config import Config 
 
 class EmailService:
     def generate_pdf(self, analysis_data):
-        # ... (PDF generation logic unchanged) ...
+        # ... (PDF generation logic unchanged, kept for completeness) ...
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -90,7 +90,6 @@ class EmailService:
         Sends the generated PDF via SMTP (SendGrid).
         """
         from_email = Config.SMTP_EMAIL
-        # 🛑 The SendGrid API Key is read here as the password
         password = Config.SMTP_PASSWORD 
 
         if not from_email or not password:
@@ -118,9 +117,12 @@ class EmailService:
                 )
                 msg.attach(part)
 
-            #  FINAL CODE: Connect to SendGrid SMTP (using starttls) and timeout
+            # 🚨 FINAL FIX: Standard SMTP connection on Port 2525 with explicit TLS context
+            context = ssl.create_default_context()
             server = smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT, timeout=10)
-            server.starttls()
+            
+            # 🚨 CRITICAL: Explicitly start TLS with the context for non-standard ports
+            server.starttls(context=context) 
             
             server.login(from_email, password)
             text = msg.as_string()
