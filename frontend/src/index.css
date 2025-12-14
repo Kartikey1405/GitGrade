@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 143 80% 5%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 143 80% 5%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 69% 58%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 143 64% 10%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 143 30% 12%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 142 69% 58%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 142 40% 20%;
+    --input: 143 30% 15%;
+    --ring: 142 69% 58%;
+
+    --radius: 1rem;
+
+    /* Custom Cyber-Nature tokens */
+    --void-black: 0 0% 4%;
+    --forest-green: 143 80% 10%;
+    --neon-green: 142 69% 58%;
+    --neon-glow: 0 0 20px hsl(142 69% 58% / 0.5);
+    --glass-bg: 143 80% 5% / 0.4;
+    --glass-border: 142 40% 25%;
+
+    /* Gradients */
+    --gradient-neon: linear-gradient(135deg, hsl(142 69% 58%) 0%, hsl(160 60% 45%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(143 80% 10% / 0.6) 0%, hsl(143 80% 5% / 0.3) 100%);
+    --gradient-void: radial-gradient(ellipse at center, hsl(143 50% 8%) 0%, hsl(0 0% 4%) 70%);
+
+    /* Shadows */
+    --shadow-neon: 0 0 30px hsl(142 69% 58% / 0.3);
+    --shadow-glow: 0 0 60px hsl(142 69% 58% / 0.2);
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.4);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+    background: hsl(var(--void-black));
+    background-image: var(--gradient-void);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: hsl(var(--neon-green) / 0.3);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  /* Glassmorphism Card */
+  .glass-card {
+    @apply relative rounded-2xl border backdrop-blur-xl;
+    background: linear-gradient(
+      135deg,
+      hsl(143 80% 10% / 0.5) 0%,
+      hsl(143 80% 5% / 0.3) 100%
+    );
+    border-color: hsl(var(--glass-border));
+    box-shadow: var(--shadow-card);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    transform: scale(1.02) translateY(-4px);
+    box-shadow: var(--shadow-neon);
+    border-color: hsl(var(--neon-green) / 0.5);
+  }
+
+  /* Neon Button */
+  .btn-neon {
+    @apply relative px-8 py-4 rounded-xl font-semibold text-background overflow-hidden;
+    background: var(--gradient-neon);
+    box-shadow: var(--shadow-neon);
+    transition: var(--transition-smooth);
+  }
+
+  .btn-neon:hover {
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+
+  .btn-neon::before {
+    content: '';
+    @apply absolute inset-0 opacity-0;
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.2) 0%, transparent 50%);
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-neon:hover::before {
+    opacity: 1;
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply px-6 py-3 rounded-xl font-medium border transition-all duration-300;
+    border-color: hsl(var(--neon-green) / 0.5);
+    color: hsl(var(--neon-green));
+  }
+
+  .btn-ghost:hover {
+    background: hsl(var(--neon-green) / 0.1);
+    border-color: hsl(var(--neon-green));
+    box-shadow: var(--shadow-neon);
+  }
+
+  /* Input Field */
+  .input-cyber {
+    @apply w-full px-6 py-4 rounded-xl border backdrop-blur-sm transition-all duration-300;
+    background: hsl(var(--forest-green) / 0.3);
+    border-color: hsl(var(--glass-border));
+    color: hsl(var(--foreground));
+  }
+
+  .input-cyber::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .input-cyber:focus {
+    outline: none;
+    border-color: hsl(var(--neon-green));
+    box-shadow: 0 0 0 3px hsl(var(--neon-green) / 0.2);
+  }
+
+  /* Terminal Text */
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Neon Text Glow */
+  .text-glow {
+    text-shadow: 0 0 10px hsl(var(--neon-green) / 0.5),
+                  0 0 20px hsl(var(--neon-green) / 0.3),
+                  0 0 40px hsl(var(--neon-green) / 0.2);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--void-black));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--forest-green));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--neon-green) / 0.5);
+  }
+}
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--forest-green)) 0%,
+      hsl(var(--neon-green) / 0.3) 50%,
+      hsl(var(--forest-green)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+}
