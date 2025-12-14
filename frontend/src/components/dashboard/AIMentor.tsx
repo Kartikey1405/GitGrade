@@ -112,7 +112,7 @@ const AIMentor = ({ summary, roadmap, tech_stack }: AIMentorProps) => {
         transition={{ delay: 0.8 }}
       >
         <CheckCircle className="w-4 h-4 text-neon" />
-        Analysis powered by Gemini AI
+        Analysis powered by GitGrade AI
       </motion.div>
     </div>
   );
