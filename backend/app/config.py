@@ -42,7 +42,7 @@ class Config:
     
     # 🚨 FIX: Use dynamic environment variables, falling back to SendGrid's standards
     SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.sendgrid.net")
-    SMTP_PORT = int(os.getenv("SMTP_PORT", 587)) # Port 587 for starttls
+    SMTP_PORT = int(os.getenv("SMTP_PORT", 2525)) # Port 587 for starttls
     
     # --- 6. Validation ---
     if not GEMINI_API_KEY:
