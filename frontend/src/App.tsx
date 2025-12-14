@@ -1,45 +1,19 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import AuthCallback from "./pages/AuthCallback";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
+import React from "react";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      {/* ✅ FIX: BrowserRouter must be the OUTER wrapper */}
-      <BrowserRouter>
-        {/* Now AuthProvider can safely use navigation hooks */}
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold text-green-500">SYSTEM CHECK: ONLINE ✅</h1>
+        <p className="text-xl">
+          If you can see this, your Vercel deployment is PERFECT.
+        </p>
+        <p className="text-gray-400">
+          The blank screen was caused by the AuthProvider or Router.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default App;
