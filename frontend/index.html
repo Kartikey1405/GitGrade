@@ -3,32 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitGrade - Debug Mode</title>
-  </head>
-  <body style="margin: 0; font-family: sans-serif;">
+    <title>GitGrade - AI-Powered GitHub Repository Analysis</title>
+    <meta name="description" content="Analyze your GitHub repositories with AI. Get instant code quality scores, improvement roadmaps, and professional PDF reports." />
+    <meta name="author" content="GitGrade" />
+    <meta name="keywords" content="GitHub, code analysis, AI, code quality, repository analysis, static analysis, code review" />
+
+    <meta property="og:title" content="GitGrade - AI-Powered GitHub Repository Analysis" />
+    <meta property="og:description" content="Analyze your GitHub repositories with AI. Get instant code quality scores and improvement roadmaps." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/banner.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GitGrade" />
+    <meta name="twitter:title" content="GitGrade - AI-Powered GitHub Repository Analysis" />
+    <meta name="twitter:description" content="Analyze your GitHub repositories with AI. Get instant code quality scores and improvement roadmaps." />
+    <meta name="twitter:image" content="/banner.png" />
     
-    <div id="debug-banner" style="background-color: #ff0000; color: white; padding: 20px; text-align: center; font-weight: bold; font-size: 24px;">
-      SYSTEM STATUS: HTML IS LOADING ✅
-      <br>
-      <span style="font-size: 16px; font-weight: normal;">
-        (If you see this, Vercel works. If the rest is blank, main.tsx is broken.)
-      </span>
-    </div>
+    <link rel="canonical" href="https://gitgrade.app" />
+  </head>
 
+  <body>
     <div id="root"></div>
-
-    <script>
-      window.addEventListener('error', function(e) {
-        const errorBox = document.createElement('div');
-        errorBox.style.background = 'black';
-        errorBox.style.color = '#ff5555';
-        errorBox.style.padding = '20px';
-        errorBox.style.marginTop = '20px';
-        errorBox.innerText = 'JS ERROR DETECTED: ' + e.message;
-        document.body.appendChild(errorBox);
-      });
-    </script>
-
-    <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
