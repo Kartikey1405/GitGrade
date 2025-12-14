@@ -5,7 +5,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 import os
-from app.config import Config  # Importing your Config class
+import ssl # <--- NEW IMPORT: Required for creating the secure context
+from app.config import Config # Importing your Config class
 
 class EmailService:
     def generate_pdf(self, analysis_data):
@@ -98,7 +99,6 @@ class EmailService:
         """
         Sends the generated PDF via SMTP (Gmail).
         """
-        # FIX: Using the variable names from YOUR config.py (SMTP_EMAIL, not EMAIL_USER)
         from_email = Config.SMTP_EMAIL
         password = Config.SMTP_PASSWORD
 
@@ -121,16 +121,18 @@ class EmailService:
                 part = MIMEBase("application", "octet-stream")
                 part.set_payload(attachment.read())
             
-            encoders.encode_base64(part)
-            part.add_header(
-                "Content-Disposition",
-                f"attachment; filename= {os.path.basename(pdf_path)}",
-            )
-            msg.attach(part)
+                encoders.encode_base64(part)
+                part.add_header(
+                    "Content-Disposition",
+                    f"attachment; filename= {os.path.basename(pdf_path)}",
+                )
+                msg.attach(part)
 
-            # Connect to Gmail SMTP
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
+            # 🚨 FIX: Connect to Gmail SMTP using direct SSL (Port 465)
+            context = ssl.create_default_context()
+            server = smtplib.SMTP_SSL(Config.SMTP_SERVER, Config.SMTP_PORT, context=context)
+            
+            # Note: starttls() is not needed for SMTP_SSL
             server.login(from_email, password)
             text = msg.as_string()
             server.sendmail(from_email, to_email, text)
