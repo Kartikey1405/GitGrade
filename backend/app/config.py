@@ -84,7 +84,7 @@ class Config:
     SMTP_EMAIL = os.getenv("SMTP_EMAIL")
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
     SMTP_SERVER = "smtp.gmail.com"
-    SMTP_PORT = 587
+    SMTP_PORT = 465
 
     # --- 6. Validation ---
     if not GEMINI_API_KEY:
