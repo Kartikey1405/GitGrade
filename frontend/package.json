@@ -10,6 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    // NEW Missing Dependencies from the latest log
+    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-aspect-ratio": "^1.0.3",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-collapsible": "^1.0.3",
+    "@radix-ui/react-context-menu": "^2.1.5",
+    "cmdk": "^1.0.0",
+    "embla-carousel-react": "^8.0.4",
+    "react-day-picker": "^8.10.1",
+    "react-qr-code": "^2.0.12",
+    "recharts": "^2.12.7",
+    "vaul": "^0.9.1",
+    
+    // Dependencies from previous successful fix rounds
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
