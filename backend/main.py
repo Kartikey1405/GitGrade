@@ -5,7 +5,7 @@ from app.routers import analyze, auth, payment
 import uvicorn
 import threading
 import time
-import requests # 🛑 REQUIRES 'requests' in requirements.txt
+import requests #  REQUIRES 'requests' in requirements.txt
 from app.config import Config
 import logging
 
