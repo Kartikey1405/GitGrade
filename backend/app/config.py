@@ -13,7 +13,7 @@ class Config:
     # --- 2. GitHub Headers (Automated) ---
     GITHUB_HEADERS = {
         "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.com.v3+json"
     } if GITHUB_TOKEN else {}
 
     # --- 3. Google OAuth Configuration ---
@@ -37,14 +37,15 @@ class Config:
 
     # --- 5. Email (SMTP) Configuration (SWITCHED TO SENDGRID PROTOCOL) ---
     SMTP_EMAIL = os.getenv("SMTP_EMAIL")
-    # 🛑 The SendGrid API Key goes into the RENDER ENV variable named SMTP_PASSWORD
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD") 
     
-    # 🚨 FIX: Use dynamic environment variables, falling back to SendGrid's standards
     SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.sendgrid.net")
-    SMTP_PORT = int(os.getenv("SMTP_PORT", 2525)) # Port 587 for starttls
+    SMTP_PORT = int(os.getenv("SMTP_PORT", 2525)) 
     
-    # --- 6. Validation ---
+    # --- 6. RENDER KEEP-ALIVE CONFIGURATION (NEW) ---
+    RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL")
+    
+    # --- 7. Validation ---
     if not GEMINI_API_KEY:
         print("WARNING: GEMINI_API_KEY is missing in .env")
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
