@@ -8,7 +8,7 @@ class AIService:
         genai.configure(api_key=Config.GEMINI_API_KEY)
         # CRITICAL FIX: Updated to 'gemini-2.5-flash' based on your available models list.
         # This resolves the 404 Model Not Found error.
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
+        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
 
     async def analyze_code_quality(self, readme_content: str, files: list, base_score: int):
         """

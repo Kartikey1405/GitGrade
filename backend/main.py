@@ -31,13 +31,13 @@ def heartbeat_ping():
             response = requests.get(url, timeout=10)
             
             if response.status_code == 200:
-                logger.info(f"✅ Keep-Alive ping successful. Status: {response.status_code}")
+                logger.info(f" Keep-Alive ping successful. Status: {response.status_code}")
             else:
                 # Log non-200 responses
-                logger.warning(f"⚠️ Keep-Alive ping failed. Status: {response.status_code}")
+                logger.warning(f" Keep-Alive ping failed. Status: {response.status_code}")
                 
         except requests.exceptions.RequestException as e:
-            logger.error(f"❌ Keep-Alive exception: {e}")
+            logger.error(f" Keep-Alive exception: {e}")
             
         # Wait for the defined interval before pinging again
         time.sleep(interval_seconds)

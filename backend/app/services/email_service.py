@@ -3,7 +3,7 @@ import os
 import base64 # Required for encoding the PDF file
 from app.config import Config 
 
-# 🚨 NEW IMPORTS for SendGrid API
+#  NEW IMPORTS for SendGrid API
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 
