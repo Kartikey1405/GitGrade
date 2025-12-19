@@ -1,9 +1,9 @@
 from fpdf import FPDF
 import os
-import base64 # Required for encoding the PDF file
+import base64 
 from app.config import Config 
 
-#  NEW IMPORTS for SendGrid API
+
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 
@@ -18,12 +18,12 @@ class EmailService:
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
 
-        # --- Header ---
+        
         pdf.set_font("Arial", 'B', 20)
         pdf.cell(0, 10, f"GitGrade Analysis Report", ln=True, align='C')
         pdf.ln(10)
 
-        # --- Repository Details ---
+        
         pdf.set_font("Arial", 'B', 12)
         owner = getattr(analysis_data.details, 'owner', 'Unknown')
         name = getattr(analysis_data.details, 'name', 'Repo')
@@ -38,19 +38,19 @@ class EmailService:
         pdf.cell(0, 8, f"Stars: {stars} | Forks: {forks}", ln=True)
         pdf.ln(5)
 
-        # --- Scores ---
+        
         pdf.set_font("Arial", 'B', 14)
         pdf.cell(0, 10, f"Final Grade: {analysis_data.score}/100", ln=True)
         pdf.ln(5)
 
-        # --- Executive Summary ---
+        
         pdf.set_font("Arial", 'B', 12)
         pdf.cell(0, 10, "Executive Summary:", ln=True)
         pdf.set_font("Arial", '', 11)
         pdf.multi_cell(0, 8, self._clean_text(analysis_data.summary))
         pdf.ln(5)
 
-        # --- Roadmap ---
+        
         pdf.set_font("Arial", 'B', 12)
         pdf.cell(0, 10, "Improvement Roadmap:", ln=True)
         
@@ -73,7 +73,7 @@ class EmailService:
                 clean_item = self._clean_text(str(item))
                 pdf.multi_cell(0, 8, f"{i}. {clean_item}")
 
-        # --- Save PDF ---
+        
         if not os.path.exists("reports"):
             os.makedirs("reports")
             
@@ -94,21 +94,21 @@ class EmailService:
         This bypasses all cloud firewall/SMTP handshake issues.
         """
         from_email = Config.SMTP_EMAIL
-        # SMTP_PASSWORD holds the SendGrid API Key (SG.xxxx)
+        
         api_key = Config.SMTP_PASSWORD 
 
         if not from_email or not api_key:
-            print(f"❌ CREDENTIAL ERROR: Could not find SMTP_EMAIL or SendGrid API Key in Config.")
+            print(f" CREDENTIAL ERROR: Could not find SMTP_EMAIL or SendGrid API Key in Config.")
             return False
 
         message = Mail(
             from_email=from_email,
             to_emails=to_email,
-            subject='Your GitGrade Analysis Report 🚀',
+            subject='Your GitGrade Analysis Report ',
             html_content='<strong>Here is your detailed GitHub analysis report attached below.</strong><br><br>Keep coding!<br>- The GitGrade Team'
         )
 
-        # Add the PDF attachment
+        
         try:
             with open(pdf_path, 'rb') as f:
                 data = f.read()
@@ -126,17 +126,17 @@ class EmailService:
         message.attachment = attachedFile
 
         try:
-            # Send email via HTTPS API call
+            
             sg = SendGridAPIClient(api_key)
-            # The API call uses standard HTTPS (Port 443), which cannot be blocked.
+            
             response = sg.send(message)
             
             if response.status_code >= 200 and response.status_code < 300:
-                print(f"✅ SendGrid API Success. Status: {response.status_code}")
+                print(f"SendGrid API Success. Status: {response.status_code}")
                 return True
             else:
-                # Log the specific SendGrid API error for debugging
-                print(f"❌ SendGrid API Error. Status: {response.status_code}")
+                
+                print(f" SendGrid API Error. Status: {response.status_code}")
                 print(f"Response Body: {response.body}")
                 return False
                 
