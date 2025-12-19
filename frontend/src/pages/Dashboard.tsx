@@ -8,7 +8,7 @@ import FileTree from '@/components/dashboard/FileTree';
 import AIMentor from '@/components/dashboard/AIMentor';
 import TerminalLoader from '@/components/dashboard/TerminalLoader';
 import RepoDetails from '@/components/dashboard/RepoDetails';
-import { analysisApi } from '@/lib/api'; // This now points to your Real Backend
+import { analysisApi } from '@/lib/api'; 
 import { AnalysisResult } from '@/types/analysis';
 
 const Dashboard = () => {
@@ -28,11 +28,11 @@ const Dashboard = () => {
     setResult(null);
 
     try {
-      // --- REAL API CALL START ---
+      
       const data = await analysisApi.analyze(repoUrl);
       setResult(data);
       toast.success('Analysis complete!');
-      // --- REAL API CALL END ---
+      
       
     } catch (error: any) {
       console.error("Analysis Failed:", error);
@@ -47,11 +47,10 @@ const Dashboard = () => {
     
     setIsSendingReport(true);
     try {
-      // --- REAL EMAIL CALL START ---
-      // We pass the current 'result' to the backend so it knows what to put in the PDF
+    
       await analysisApi.sendReport(result);
       toast.success('Report sent to your email!');
-      // --- REAL EMAIL CALL END ---
+      
       
     } catch (error: any) {
       console.error("Email Failed:", error);
