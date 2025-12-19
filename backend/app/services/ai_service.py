@@ -6,8 +6,7 @@ from app.config import Config
 class AIService:
     def __init__(self):
         genai.configure(api_key=Config.GEMINI_API_KEY)
-        # CRITICAL FIX: Updated to 'gemini-2.5-flash' based on your available models list.
-        # This resolves the 404 Model Not Found error.
+      
         self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
 
     async def analyze_code_quality(self, readme_content: str, files: list, base_score: int):
@@ -16,12 +15,12 @@ class AIService:
         and detect the technology stack.
         """
         
-        # 1. SMART CONTEXT
+      
         all_files = " ".join(files)
         is_monorepo = "backend/" in all_files and "frontend/" in all_files
         has_gitignore = ".gitignore" in all_files
         
-        # 2. FILE FILTERING
+      
         priority_files = [
             'package.json', 'pom.xml', 'build.gradle', 'requirements.txt', 
             'Dockerfile', 'docker-compose.yml', 'vite.config', 'next.config',
@@ -35,7 +34,7 @@ class AIService:
         ]
         file_summary = "\n".join(important_files[:80]) 
 
-        # 3. SENIOR ARCHITECT PROMPT (v3.0 - Structured Output)
+        
         prompt = f"""
         You are a harsh but helpful Senior Software Architect. 
         Analyze this GitHub repository structure and return a raw JSON response.
@@ -88,7 +87,7 @@ class AIService:
         
         except Exception as e:
             print(f"AI Error: {e}")
-            # Fallback must match the new Models schema to prevent crashes
+           
             return {
                 "tech_stack": {"frontend": [], "backend": [], "infrastructure": []},
                 "summary": "AI Analysis unavailable. Showing fallback data.",
